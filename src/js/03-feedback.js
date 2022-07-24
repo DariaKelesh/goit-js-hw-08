@@ -1,3 +1,4 @@
+var _ = require('lodash');
 const form = document.querySelector(".feedback-form");
 const LOCALSTORAGE_KEY = "feedback-form-state";
 
@@ -24,10 +25,11 @@ const save = (key, value) => {
 
 initForm();
 
-form.addEventListener("input", handleInput);
+form.addEventListener("input", throttle(handleInput, 500) )
 
 function handleInput() {
     const emailRef = form.elements.email.value;
+    // console.log(emailRef);
     const messageRef = form.elements.message.value;
     const feedbackRef = {
         email: emailRef,
@@ -52,8 +54,12 @@ form.addEventListener("submit", handleSubmit);
 
 function handleSubmit(event) {
     event.preventDefault();
+    if (form.elements.email.value !== "" && form.elements.message.value !== "") {
+        console.log(load(LOCALSTORAGE_KEY));  
+    } else {
+        alert("Fill in all the fields!!!")
+    }
     
-    console.log(load(LOCALSTORAGE_KEY));
     event.target.reset();
     localStorage.removeItem(LOCALSTORAGE_KEY);
    
